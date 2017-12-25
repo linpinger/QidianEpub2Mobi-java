@@ -31,5 +31,6 @@ QidianEpub2Mobi(起点epub转mobi)
 - 图形界面: java -jar QidianEpub2Mobi-java.jar， 按 选择 按钮选择epub文件，或将epub文件拖动到窗口中，然后双击第一章或生成按钮
 
 **更新日志:**
+- 2017-12-25: 删除无用的文件
 - 2017-12-18: 第一版
 

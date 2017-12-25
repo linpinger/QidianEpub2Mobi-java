@@ -71,7 +71,7 @@ public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
         msg = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Qidian Epub 2 Mobi Ver: 2017-12-18");
+        setTitle("Qidian Epub 2 Mobi Ver: 2017-12-25");
         setAlwaysOnTop(true);
         setFont(new java.awt.Font("ÎÄÈªæäÎ¢Ã×ºÚ", 0, 14)); // NOI18N
         setLocationByPlatform(true);

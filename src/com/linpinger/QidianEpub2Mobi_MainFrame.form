@@ -83,7 +83,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="Qidian Epub 2 Mobi Ver: 2017-12-18"/>
+    <Property name="title" type="java.lang.String" value="Qidian Epub 2 Mobi Ver: 2017-12-25"/>
     <Property name="alwaysOnTop" type="boolean" value="true"/>
     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
       <Font name="&#x6587;&#x6cc9;&#x9a7f;&#x5fae;&#x7c73;&#x9ed1;" size="14" style="0"/>
