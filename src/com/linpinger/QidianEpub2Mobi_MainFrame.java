@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.linpinger;
 
 import com.linpinger.tool.FileDrop;
@@ -21,8 +17,8 @@ import javax.swing.JFileChooser;
 public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
 
     String SrcPath = "/dev/shm/1234567890.epub" ;  // 文件路径
-    final String myBodyFontStyle="\t\t@font-face { font-family: \"hei\"; src: local(\"Zfull-GB\"); }\n\t\t.content { font-family: \"hei\"; }\n";
-    String BodyFontStyle= myBodyFontStyle;
+    final String defCSS = "h2,h3,h4 { text-align: center; }\n\n@font-face { font-family: \"hei\"; src: local(\"Zfull-GB\"); }\n.content { font-family: \"hei\"; }\n";
+    String myCSS= defCSS;
     boolean isNameHaveCNName = true ;
     DefaultListModel mList = new DefaultListModel();
     
@@ -71,7 +67,7 @@ public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
         msg = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Qidian Epub 2 Mobi Ver: 2017-12-25");
+        setTitle("Qidian Epub 2 Mobi Ver: 2018-01-10");
         setAlwaysOnTop(true);
         setFont(new java.awt.Font("文泉驿微米黑", 0, 14)); // NOI18N
         setLocationByPlatform(true);
@@ -246,11 +242,11 @@ public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
 
     private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
         if (jCheckBoxMenuItem2.isSelected()) {
-            BodyFontStyle = myBodyFontStyle;
+            myCSS = defCSS;
             msg.setText("使用字体");
             System.out.println("- Font: myFont");
         } else {
-            BodyFontStyle = "";
+            myCSS = "h2,h3,h4 { text-align: center; }\n";
             msg.setText("不使用字体");
             System.out.println("- Font: 空");
         }
@@ -315,8 +311,8 @@ public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
         long sTime = System.currentTimeMillis();
 
         FoxEpubWriter newEpub = new FoxEpubWriter(newFile, bookName);
-        newEpub.BookCreator = bookAuthor;
-        newEpub.BodyFontStyle = BodyFontStyle;
+        newEpub.setBookCreator(bookAuthor);
+        newEpub.setCSS(myCSS);
 
         String html = "";
         int ii = -1 ;
@@ -363,7 +359,7 @@ public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
             System.out.println("- start to mobi: " + newFile.getPath());
 
             FoxEpubWriter newEpub = new FoxEpubWriter(newFile, bookName);
-            newEpub.BookCreator = bookAuthor;
+            newEpub.setBookCreator(bookAuthor);
 
             String html = "";
             for (HashMap<String, Object> hm : epubReader.getQiDianEpubTOC()) {
