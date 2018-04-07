@@ -4,9 +4,12 @@ package com.linpinger;
 import com.linpinger.tool.FileDrop;
 import com.linpinger.tool.FoxEpubReader;
 import com.linpinger.tool.FoxEpubWriter;
+import com.linpinger.tool.ToolBookJava;
 import java.awt.Color;
 import java.io.File;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 
@@ -67,7 +70,7 @@ public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
         msg = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Qidian Epub 2 Mobi Ver: 2018-01-10");
+        setTitle("Qidian Epub 2 Mobi Ver: 2018-04-07");
         setAlwaysOnTop(true);
         setFont(new java.awt.Font("文泉驿微米黑", 0, 14)); // NOI18N
         setLocationByPlatform(true);
@@ -212,6 +215,7 @@ public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
 
     private void jSrcPathKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jSrcPathKeyPressed
         if ( java.awt.event.KeyEvent.VK_ENTER ==  evt.getKeyCode() ) { // 回车
+            SrcPath = jSrcPath.getText();
             showEpubInfo();
         }
     }//GEN-LAST:event_jSrcPathKeyPressed
@@ -264,7 +268,37 @@ public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jCheckBoxMenuItem3ActionPerformed
 
+    // SiteQiDian.java
+    public static String getBookID_FromURL(String iURL) {
+        String sQDID = "";
+        String RE = "";
+        if (iURL.contains(".if.qidian.com")) {
+            RE = "(?i)BookId=([0-9]+)&";
+        } else if (iURL.contains("m.qidian.com/book/")) { //2017-1-11: m.qidian.com/book/1004179514[/339781806]
+            RE = "(?i)/book/([0-9]+)";
+        } else if (iURL.contains("https://book.qidian.com")) { //https://book.qidian.com/info/1011219483#Catalog
+            RE = "(?i)/([0-9]+)[#Catalog]*";
+        } else {
+            RE = "(?i)([0-9]+)";
+        }
+        Matcher m = Pattern.compile(RE).matcher(iURL);
+        while (m.find()) {
+            sQDID = m.group(1);
+        }
+        return sQDID;
+    }
+        
     void showEpubInfo() {  // 按选择按钮后，显示信息，依赖变量 SrcPath
+        if ( SrcPath.startsWith("http") || SrcPath.matches("^[0-9]+$") ) { // 网址 || 数字
+            String QDID = getBookID_FromURL(SrcPath);
+            String epubURL = "http://download.qidian.com/epub/" + QDID + ".epub";
+            SrcPath = System.getProperty("user.dir") + File.separator + QDID + ".epub" ; //java.io.tmpdir
+            
+            msg.setText("下载: " + epubURL);
+            System.out.println("- download: " + epubURL + " -> " + SrcPath);
+            ToolBookJava.saveHTTPFile(epubURL, SrcPath);
+            jSrcPath.setText(SrcPath);
+        }
         File epubFile = new File(SrcPath);
         if (!epubFile.exists()) {
             msg.setText("错误: 文件不存在: " + epubFile.getPath());
@@ -335,11 +369,20 @@ public class QidianEpub2Mobi_MainFrame extends javax.swing.JFrame {
     public static void main(String args[]) {
         
          if (0 == args.length) {
-            System.out.println("Usage: java -jar this.jar qidian.epub\n");
+            System.out.println("Usage: java -jar this.jar qidianID[.epub]\n");
         }
         if (1 == args.length) {
 
             String srcPath = args[0];
+
+            if (srcPath.startsWith("http") || srcPath.matches("^[0-9]+$")) { // 网址 || 数字
+                String QDID = getBookID_FromURL(srcPath);
+                String epubURL = "http://download.qidian.com/epub/" + QDID + ".epub";
+                srcPath = System.getProperty("user.dir") + File.separator + QDID + ".epub"; //java.io.tmpdir
+
+                System.out.println("- download: " + epubURL + " -> " + srcPath);
+                ToolBookJava.saveHTTPFile(epubURL, srcPath);
+            }
             File epubFile = new File(srcPath);
             System.out.println("- qidian epub: " + srcPath);
 
